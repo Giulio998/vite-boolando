@@ -1,0 +1,55 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Roboto', sans-serif;
+}
+
+ul,
+li,
+a {
+    list-style: none;
+    text-decoration: none;
+    color: white;
+}
+.flexSpace{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.row{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+}
+.alignCenter{
+    display: flex;
+    align-items: center;
+}
+.marginLeft{
+    margin-left: 10px;
+}
+
+.marginRight{
+margin-right: 10px;
+}
+.container{
+    margin: 0 auto;
+   max-width: 1000px ;
+}
+
+.flexCenter{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.col-4{
+    width:calc(100% / 3 - 10px);
+
+}
+.mainPadding{
+    padding-top: 120px;
+}
