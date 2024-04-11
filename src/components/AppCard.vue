@@ -1,24 +1,35 @@
 <script>
+
 export default {
-  props: {
-    brand: String,
-    firstImage : String,
-    secondImage : String,
-    price : Number,
-    discount : Number,
- 
-  },
-  data(){
-    return {
-        hovered: false,
+   
+    props: {
+        brand: String,
+        frontImage: String,
+        backImage: String,
+        price: Number,
+        name: String,
+        badges: [Object],
+        isInFavorites: Boolean,
+    },
+    data() {
+        return {
+            hovered: false,
+        }
+    },
+    methods: {
+    stringToNumber(var1){
+       return parseInt(var1.replace('-',''))
+        
+    },
+    discountedPrice(price,var1){
+     return (price - ((this.stringToNumber(var1) * price) / 100)).toFixed(2)
     }
+
   },
-  methods: {
-    discountedPrice(price,discount){
-        return (price - (price*discount / 100)).toFixed(2)
-    }
-  },
+
 }
+
+
 </script>
 
 <template>
@@ -26,18 +37,24 @@ export default {
         <div @mouseover="hovered = true" @mouseleave="hovered = false" class="card ">
             <div class="cardHead">
                 <div class="prodotto">
-                    <img class="cardImg" :src="hovered ? secondImage : firstImage ">
-
+                    <img class="cardImg" :src="hovered ? backImage : frontImage">
+                    <template v-for="(badge, index) in badges" :key="index">
+                        <span v-if="badge.type=='discount'" class="red badge firstBadge">{{ badge.value }}</span>
+                        <span @click="isInFavorites = !isInFavorites"   :class=" isInFavorites ? 'favorite preferiti badge' : 'preferiti badge' "  >&hearts;</span>
+                        <span v-if="badge.type=='tag' && badges.length > 1" class="green badge secondBadge">{{ badge.value }}</span>
+                        <span v-else-if="badge.type=='tag'" class="green badge firstBadge">{{ badge.value }}</span>
+                        
+                    </template>
                 </div>
-                <span class="red badge">{{discount}}%</span>
-                <span class="preferiti badge">&hearts;</span>
-                <span class="green badge">Sostenibilità</span>
             </div>
             <div class="cardInfo">
                 <span class="brand">{{ brand }}</span>
-                <h5>RELAXED FIT TEE UNISEX</h5>
-                <span class="prezzoScontato marginRight">{{discountedPrice(price,discount)}}</span>
-                <span><del>{{ price }}</del></span> 
+                <h5>{{ name }}</h5>
+                <template v-for="(badge, index) in badges" :key="index">
+                    <span v-if="badge.type=='discount'" class="prezzoScontato marginRight">{{ discountedPrice(price, badge.value) }}</span>
+                </template>
+                
+                <span><del>{{ price }}</del></span>
             </div>
 
         </div>
@@ -45,52 +62,77 @@ export default {
 </template>
 
 <style scoped>
-.card{
+.card {
     height: 500px;
     width: 277px;
 }
 
-.cardHead{
+.cardHead {
     position: relative;
     height: 400px;
 }
 
 
-.prezzoScontato{
+.prezzoScontato {
     color: red;
 }
 
-.brand{
+.brand {
     font-size: small;
 }
 
-.badge{
-  
-    padding: 5px 10px 5px 10px;
-    position: absolute;
-    z-index: 3;
-    
-}
 
-.red{
-    left: 0px;
-    bottom: 35px;
-    background-color: red;
-    color: white;
-}
-
-.green{
-    background-color: green;
-    left: 55px;
-    bottom: 35px;
-    color: white;
-}
-
-.customGreen{
+.customGreen {
     background-color: green;
     left: 0px;
     bottom: 35px;
     color: white;
+}
+
+
+
+.prodotto {
+    height: 100%;
+    position: relative;
+}
+
+
+.cardImg {
+    height: 100%;
+}
+
+.badge {
+
+padding: 5px 10px 5px 10px;
+position: absolute;
+z-index: 3;
+
+}
+
+.firstBadge{
+left: 0px;
+bottom: 35px;
+}
+
+.secondBadge{
+left: 55px;
+bottom: 35px;
+}
+
+.red {
+background-color: red;
+color: white;
+}
+
+.green {
+background-color: green;
+
+color: white;
+}
+
+
+.favorite{
+    color: red;
 }
 
 .preferiti{
@@ -98,21 +140,8 @@ export default {
     top: 15px;
     font-size:large;
     background-color: white;
-
+    cursor: pointer;
 }
 
-.prodotto{
-   height: 100%;
-   position: relative;
-}
-
-
-.cardImg{
-    height: 100%;
-}
-
-.preferiti:hover.preferiti{
-    color: red;
-}
 
 </style>
